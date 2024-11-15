@@ -10,3 +10,8 @@ phases:
     commands:
       - echo Build phase
       - npm run build
+phases:
+  install:
+    commands:
+      - curl -sL https://deb.nodesource.com/setup_16.x | bash -
+      - apt-get install -y nodejs
