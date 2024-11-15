@@ -1,17 +1,22 @@
-
 version: 0.2
 
 phases:
   install:
+    runtime-versions:
+      java: corretto8
+  pre_build:
     commands:
-      - echo Installing dependencies
-      - npm install
+      - echo Initializing environment
+      - export CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain unicorns --domain-owner 628777747297 --query authorizationToken --output text`
   build:
     commands:
-      - echo Build phase
-      - npm run build
-phases:
-  install:
+      - echo Build started on `date`
+      - mvn -s settings.xml compile
+  post_build:
     commands:
-      - curl -sL https://deb.nodesource.com/setup_16.x | bash -
-      - apt-get install -y nodejs
+      - echo Build completed on `date`
+      - mvn -s settings.xml package
+artifacts:
+  files:
+    - target/unicorn-web-project.war
+  discard-paths: no
